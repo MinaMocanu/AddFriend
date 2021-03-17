@@ -1,0 +1,26 @@
+ [HttpPost]
+        public void AddFriend(string friend)
+        {
+            CineHiveContext db = new CineHiveContext();
+
+            // Get user's id
+            var userID = User.Identity.GetUserId();
+
+            UserProfile userDto = db.UserProfiles.Where(x => x.Email.Equals(User.Identity.Name)).FirstOrDefault();
+            string userId = userDto.UserId;
+
+            // Get friend to be's id
+            UserProfile userDto2 = db.UserProfiles.Where(x => x.Email.Equals(friend)).FirstOrDefault();
+            string friendId = userDto2.UserId;
+
+
+            FriendRequest friendDto = new FriendRequest();
+
+            friendDto.SenderId = userId;
+            friendDto.ReceiverId = friendId;
+            friendDto.IsAccepted = false;
+
+            db.Requests.Add(friendDto);
+
+            db.SaveChanges();
+        }
